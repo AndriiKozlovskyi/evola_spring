@@ -15,5 +15,53 @@ public class BicycleRequest {
     private Integer price;
     private String motor;
     private String description;
-    private MultipartFile image; // Handle file upload
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Integer getBatteryCapacity() {
+        return batteryCapacity;
+    }
+
+    public void setBatteryCapacity(Integer batteryCapacity) {
+        this.batteryCapacity = batteryCapacity;
+    }
+
+    public Integer getWheelSize() {
+        return wheelSize;
+    }
+
+    public void setWheelSize(Integer wheelSize) {
+        this.wheelSize = wheelSize;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public String getMotor() {
+        return motor;
+    }
+
+    public void setMotor(String motor) {
+        this.motor = motor;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }

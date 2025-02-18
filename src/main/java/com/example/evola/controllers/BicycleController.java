@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,18 +38,16 @@ public class BicycleController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createBicycle(@RequestBody BicycleRequest bicycleRequest) {
-        try {
-            return ResponseEntity.ok(bicycleService.saveBicycle(bicycleRequest));
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> createBicycle( @RequestPart("bicycle") BicycleRequest bicycleRequest,
+                                            @RequestPart(value = "image", required = false) MultipartFile image) {
+        return ResponseEntity.ok(bicycleService.saveBicycle(bicycleRequest, image));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBicycle(@PathVariable Long id, @RequestBody BicycleRequest updatedBicycle) {
+    public ResponseEntity<?> updateBicycle(@PathVariable Long id, @RequestPart("bicycle") BicycleRequest bicycleRequest,
+                                           @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            return ResponseEntity.ok(bicycleService.updateBicycle(id, updatedBicycle));
+            return ResponseEntity.ok(bicycleService.updateBicycle(id, bicycleRequest, image));
         } catch (RuntimeException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

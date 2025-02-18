@@ -6,6 +6,7 @@ import com.example.evola.repositories.BicycleRepository;
 import com.example.evola.tables.Bicycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +18,7 @@ public class BicycleService {
     @Autowired
     private BicycleRepository bicycleRepository;
 
-
-    public BicycleResponse saveBicycle(BicycleRequest bicycleRequest) throws IOException {
+    public BicycleResponse saveBicycle(BicycleRequest bicycleRequest, MultipartFile image) {
         Bicycle bicycle = new Bicycle();
         bicycle.setModel(bicycleRequest.getModel());
         bicycle.setBatteryCapacity(bicycleRequest.getBatteryCapacity());
@@ -27,9 +27,14 @@ public class BicycleService {
         bicycle.setMotor(bicycleRequest.getMotor());
         bicycle.setDescription(bicycleRequest.getDescription());
 
-        // Convert MultipartFile to byte[]
-        if (bicycleRequest.getImage() != null && !bicycleRequest.getImage().isEmpty()) {
-            bicycle.setImageData(bicycleRequest.getImage().getBytes());
+        try {
+            if (image != null && !image.isEmpty()) {
+                byte[] imageBytes = image.getBytes();
+                System.out.println("Image Bytes Length: " + imageBytes.length); // Debugging
+                bicycle.setImageData(imageBytes);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store image", e);
         }
 
         Bicycle savedBicycle = bicycleRepository.save(bicycle);
@@ -56,7 +61,7 @@ public class BicycleService {
     }
 
     /** 🔹 Update Bicycle details */
-    public Bicycle updateBicycle(Long id, BicycleRequest updatedBicycle) throws IOException {
+    public Bicycle updateBicycle(Long id, BicycleRequest updatedBicycle, MultipartFile image) throws IOException {
         return bicycleRepository.findById(id).map(existingBicycle -> {
             existingBicycle.setModel(updatedBicycle.getModel());
             existingBicycle.setBatteryCapacity(updatedBicycle.getBatteryCapacity());
@@ -66,8 +71,8 @@ public class BicycleService {
             existingBicycle.setDescription(updatedBicycle.getDescription());
 
             try {
-                if (updatedBicycle.getImage() != null && !updatedBicycle.getImage().isEmpty()) {
-                    existingBicycle.setImageData(updatedBicycle.getImage().getBytes());
+                if (image != null && !image.isEmpty()) {
+                    existingBicycle.setImageData(image.getBytes());
                 }
             } catch (IOException e) {
                 throw new RuntimeException("Failed to update bicycle image", e);
@@ -92,7 +97,6 @@ public class BicycleService {
         response.setMotor(bicycle.getMotor());
         response.setDescription(bicycle.getDescription());
         response.setImageBase64(bicycle.getImageBase64());
-
         return response;
     }
 }

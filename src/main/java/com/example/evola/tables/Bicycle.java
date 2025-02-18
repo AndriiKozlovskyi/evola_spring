@@ -25,8 +25,9 @@ public class Bicycle {
     private String motor;
     private String description;
     @Lob
-    @Column(columnDefinition = "BYTEA") // PostgreSQL column type for binary data
+    @Column(name = "image_data", length = 1000)
     private byte[] imageData;
+
 
     public String getImageBase64() {
         return imageData != null ? Base64.getEncoder().encodeToString(imageData) : null;
