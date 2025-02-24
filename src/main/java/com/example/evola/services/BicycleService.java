@@ -25,6 +25,7 @@ public class BicycleService {
         bicycle.setWheelSize(bicycleRequest.getWheelSize());
         bicycle.setPrice(bicycleRequest.getPrice());
         bicycle.setMotor(bicycleRequest.getMotor());
+        bicycle.setOnSell(bicycleRequest.isOnSell());
         bicycle.setDescription(bicycleRequest.getDescription());
 
         try {
@@ -68,6 +69,7 @@ public class BicycleService {
             existingBicycle.setWheelSize(updatedBicycle.getWheelSize());
             existingBicycle.setPrice(updatedBicycle.getPrice());
             existingBicycle.setMotor(updatedBicycle.getMotor());
+            existingBicycle.setOnSell(updatedBicycle.isOnSell());
             existingBicycle.setDescription(updatedBicycle.getDescription());
 
             try {
@@ -97,6 +99,7 @@ public class BicycleService {
         response.setMotor(bicycle.getMotor());
         response.setDescription(bicycle.getDescription());
         response.setImageBase64(bicycle.getImageBase64());
+        response.setOnSell(bicycle.isOnSell());
         return response;
     }
 }

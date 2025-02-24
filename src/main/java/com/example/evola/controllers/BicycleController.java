@@ -3,6 +3,8 @@ package com.example.evola.controllers;
 import com.example.evola.dtos.BicycleRequest;
 import com.example.evola.dtos.BicycleResponse;
 import com.example.evola.services.BicycleService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,23 +39,35 @@ public class BicycleController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> createBicycle( @RequestPart("bicycle") BicycleRequest bicycleRequest,
-                                            @RequestPart(value = "image", required = false) MultipartFile image) {
-        return ResponseEntity.ok(bicycleService.saveBicycle(bicycleRequest, image));
-    }
+    @PostMapping("/admin")
+    public ResponseEntity<?> createBicycle(
+            @RequestPart("bicycle") String bicycleJson,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateBicycle(@PathVariable Long id, @RequestPart("bicycle") BicycleRequest bicycleRequest,
-                                           @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            return ResponseEntity.ok(bicycleService.updateBicycle(id, bicycleRequest, image));
-        } catch (RuntimeException | IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            ObjectMapper objectMapper = new ObjectMapper();
+            BicycleRequest bicycleRequest = objectMapper.readValue(bicycleJson, BicycleRequest.class);
+            return ResponseEntity.ok(bicycleService.saveBicycle(bicycleRequest, image));
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON format");
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<?> updateBicycle(@PathVariable Long id, @RequestPart("bicycle") String bicycleJson,
+                                           @RequestPart(value = "image", required = false) MultipartFile image) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            BicycleRequest bicycleRequest = objectMapper.readValue(bicycleJson, BicycleRequest.class);
+            return ResponseEntity.ok(bicycleService.updateBicycle(id, bicycleRequest, image));
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON format");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Void> deleteBicycle(@PathVariable Long id) {
         bicycleService.deleteBicycle(id);
         return ResponseEntity.noContent().build();

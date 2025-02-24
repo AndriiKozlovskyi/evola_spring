@@ -16,6 +16,7 @@ public class BicycleResponse {
     private String motor;
     private String description;
     public String imageBase64;
+    private boolean onSell;
 
     public Long getId() {
         return id;
@@ -79,5 +80,13 @@ public class BicycleResponse {
 
     public void setImageBase64(String imageBase64) {
         this.imageBase64 = imageBase64;
+    }
+
+    public boolean isOnSell() {
+        return onSell;
+    }
+
+    public void setOnSell(boolean onSell) {
+        this.onSell = onSell;
     }
 }

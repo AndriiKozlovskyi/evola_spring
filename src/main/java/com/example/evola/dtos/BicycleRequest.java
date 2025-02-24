@@ -14,6 +14,7 @@ public class BicycleRequest {
     private Integer wheelSize;
     private Integer price;
     private String motor;
+    private boolean onSell;
     private String description;
 
     public String getModel() {
@@ -64,4 +65,11 @@ public class BicycleRequest {
         this.description = description;
     }
 
+    public boolean isOnSell() {
+        return onSell;
+    }
+
+    public void setOnSell(boolean onSell) {
+        this.onSell = onSell;
+    }
 }

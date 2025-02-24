@@ -24,6 +24,7 @@ public class Bicycle {
     private Integer price;
     private String motor;
     private String description;
+    private boolean onSell;
     @Lob
     @Column(name = "image_data", length = 1000)
     private byte[] imageData;
@@ -95,6 +96,14 @@ public class Bicycle {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isOnSell() {
+        return onSell;
+    }
+
+    public void setOnSell(boolean onSell) {
+        this.onSell = onSell;
     }
 }
 
